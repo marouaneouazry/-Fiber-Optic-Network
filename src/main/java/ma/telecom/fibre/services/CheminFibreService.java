@@ -25,6 +25,11 @@ public class CheminFibreService {
     }
 
     public CheminFibre create(CheminFibreRequest req) {
+        java.util.List<String> allowedFiberTypes = java.util.List.of("SMF G.652D", "SMF G.657A2", "SMF G.657B3");
+        if (req.getTypeFibre() != null && !allowedFiberTypes.contains(req.getTypeFibre())) {
+            throw new ma.telecom.fibre.exceptions.BusinessRuleException("Type de fibre non autorisé : " + req.getTypeFibre());
+        }
+
         CheminFibre chemin = CheminFibre.builder()
                 .source(req.getSource())
                 .destination(req.getDestination())

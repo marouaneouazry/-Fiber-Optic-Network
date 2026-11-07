@@ -45,9 +45,50 @@ public class BoiteClientService {
             throw new BusinessRuleException(
                     "Capacité maximale atteinte (" + boite.getCapacite() + " ports)");
 
+        // Attribuer automatiquement le premier port libre
+        int freePort = -1;
+        for (int i = 1; i <= boite.getCapacite(); i++) {
+            final int currentPort = i;
+            if (boite.getClients().stream().noneMatch(c -> c.getPort() == currentPort)) {
+                freePort = currentPort;
+                break;
+            }
+        }
+        if (freePort == -1) {
+            throw new BusinessRuleException("Erreur lors de l'attribution du port.");
+        }
+        
+        client.setPort(freePort);
         boite.getClients().add(client);
         boite.setPortsUtilises(boite.getPortsUtilises() + 1);
         return repository.save(boite);
+    }
+
+    public BoiteClient updateClient(String id, int port, BoiteClient.ClientPort updatedClient) {
+        BoiteClient boite = findById(id);
+        BoiteClient.ClientPort client = boite.getClients().stream()
+                .filter(c -> c.getPort() == port)
+                .findFirst()
+                .orElseThrow(() -> new BusinessRuleException("Client non trouvé sur le port " + port));
+
+        client.setNom(updatedClient.getNom());
+        client.setContrat(updatedClient.getContrat());
+        client.setTelephone(updatedClient.getTelephone());
+        client.setAdresse(updatedClient.getAdresse());
+        client.setStatut(updatedClient.getStatut());
+
+        return repository.save(boite);
+    }
+
+    public BoiteClient deleteClient(String id, int port) {
+        BoiteClient boite = findById(id);
+        boolean removed = boite.getClients().removeIf(c -> c.getPort() == port);
+        if (removed) {
+            boite.setPortsUtilises(boite.getPortsUtilises() - 1);
+            return repository.save(boite);
+        } else {
+            throw new BusinessRuleException("Client non trouvé sur le port " + port);
+        }
     }
 
     public void delete(String id) {

@@ -55,6 +55,26 @@ public class BoiteClientController {
         return ResponseEntity.ok(service.ajouterClient(id, client));
     }
 
+    // Modifier un client
+    @PutMapping("/{id}/clients/{port}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<BoiteClient> updateClient(
+            @PathVariable String id,
+            @PathVariable int port,
+            @RequestBody BoiteClient.ClientPort client) {
+        return ResponseEntity.ok(service.updateClient(id, port, client));
+    }
+
+    // Supprimer un client
+    @DeleteMapping("/{id}/clients/{port}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse> deleteClient(
+            @PathVariable String id,
+            @PathVariable int port) {
+        service.deleteClient(id, port);
+        return ResponseEntity.ok(new ApiResponse(true, "Client supprimé avec succès"));
+    }
+
     @PatchMapping("/{id}/statut")
     @PreAuthorize("hasAnyRole('ADMIN','TECHNICIEN')")
     public ResponseEntity<BoiteClient> updateStatut(@PathVariable String id,

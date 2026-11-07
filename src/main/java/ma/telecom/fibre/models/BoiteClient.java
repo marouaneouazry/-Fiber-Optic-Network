@@ -50,5 +50,8 @@ public class BoiteClient {
         private int port;
         private String nom;
         private String contrat;
+        private String telephone;
+        private String adresse;
+        private String statut;
     }
 }

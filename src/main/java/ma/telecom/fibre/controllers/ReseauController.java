@@ -19,6 +19,7 @@ public class ReseauController {
     private final SplitterRepository splitterRepo;
     private final BoiteClientRepository boiteRepo;
     private final CheminFibreRepository cheminRepo;
+    private final EquipementRepository equipementRepo;
 
     // Retourne tous les nœuds + chemins pour la carte Leaflet
     @GetMapping("/carte")
@@ -68,7 +69,7 @@ public class ReseauController {
                 "splitters", splitterRepo.count(),
                 "boites", boiteRepo.count(),
                 "chemins", cheminRepo.count(),
-                "equipementsActifs", 0 // à compléter avec EquipementRepository
+                "equipementsActifs", equipementRepo.count()
         ));
     }
 }

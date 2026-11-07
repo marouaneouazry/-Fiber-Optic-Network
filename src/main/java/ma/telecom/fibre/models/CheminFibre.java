@@ -35,6 +35,7 @@ public class CheminFibre {
     public static class NoeudRef {
         private String type; // datacenter | repartiteur | splitter | boite
         private String id;
+        private String nom; 
     }
 
     @Data @NoArgsConstructor @AllArgsConstructor
